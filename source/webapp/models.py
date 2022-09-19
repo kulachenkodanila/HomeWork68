@@ -4,7 +4,6 @@ from django.db import models
 # Create your models here.
 from django.urls import reverse
 
-from webapp.validate import validate_title
 
 
 class BaseModel(models.Model):
@@ -21,6 +20,7 @@ class Article(BaseModel):
     tags = models.ManyToManyField("webapp.Tag", related_name="articles", blank=True)
     author = models.ForeignKey(get_user_model(), related_name="articles", verbose_name="Автор", default=1,
                                on_delete=models.SET_DEFAULT)
+    likes = models.ManyToManyField(get_user_model(), blank=True, related_name="likes")
 
     def __str__(self):
         return f"{self.id}. {self.title}: {self.author.username}"
@@ -35,9 +35,7 @@ class Article(BaseModel):
         db_table = "articles"
         verbose_name = "Статья"
         verbose_name_plural = "Статьи"
-        # permissions = [
-        #     ('сan_have_piece_of_pizza', 'Может съесть кусочек пиццы')
-        # ]
+
 
 
 class Comment(BaseModel):

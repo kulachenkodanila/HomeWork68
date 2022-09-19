@@ -20,9 +20,6 @@ class IndexView(ListView):
     paginate_by = 6
 
     def get(self, request, *args, **kwargs):
-        # print(request.user.user_permissions.all())
-        # request.user.user_permissions.add(Permission.objects.get(codename="delete_article"))
-        # print(request.user.user_permissions.all())
         self.form = self.get_search_form()
         self.search_value = self.get_search_value()
         return super().get(request, *args, **kwargs)
@@ -65,10 +62,6 @@ class CreateArticle(LoginRequiredMixin, CreateView):
     form_class = ArticleForm
     template_name = "articles/create.html"
 
-    # def dispatch(self, request, *args, **kwargs):
-    #     if request.user.is_authenticated and self.request.user.has_perm("webapp.add_article"):
-    #         return super().dispatch(request, *args, **kwargs)
-    #     return redirect("accounts:login")
 
     def form_valid(self, form):
         user = self.request.user
@@ -96,8 +89,6 @@ class DeleteArticle(PermissionRequiredMixin, DeleteView):
     def has_permission(self):
         return super().has_permission() or self.request.user == self.get_object().author
 
-        # return self.request.user.is_superuser or \
-        #        self.request.user.groups.filter(name__in=("Модераторы",)).exists()
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(data=request.POST, instance=self.get_object())
